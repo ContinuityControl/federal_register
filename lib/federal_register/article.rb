@@ -46,22 +46,22 @@ class FederalRegister::Article < FederalRegister::Base
                 :publication_date,
                 :signing_date,
                 :type => :date
- 
+
   def self.search(args)
-    FederalRegister::ResultSet.fetch("/articles.json", :query => args, :result_class => self)
+    FederalRegister::ResultSet.fetch("/documents.json", :query => args, :result_class => self)
   end
 
   def self.search_metadata(args)
-    FederalRegister::ResultSet.fetch("/articles.json", :query => args.merge(:metadata_only => '1'), :result_class => self)
+    FederalRegister::ResultSet.fetch("/documents.json", :query => args.merge(:metadata_only => '1'), :result_class => self)
   end
-  
+
   def self.find(document_number, options={})
     validate_document_number!(document_number)
     if options[:fields].present?
-      attributes = get("/articles/#{document_number}.json", :query => {:fields => options[:fields]})
+      attributes = get("/documents/#{document_number}.json", :query => {:fields => options[:fields]})
       new(attributes)
     else
-      attributes = get("/articles/#{document_number}.json")
+      attributes = get("/documents/#{document_number}.json")
       new(attributes, :full => true)
     end
   end
@@ -75,15 +75,15 @@ class FederalRegister::Article < FederalRegister::Base
     document_numbers = document_numbers.flatten
     document_numbers.each {|doc_num| validate_document_number!(doc_num)}
 
-    result_set = FederalRegister::ResultSet.fetch("/articles/#{document_numbers.join(',')}.json", fetch_options)
+    result_set = FederalRegister::ResultSet.fetch("/documents/#{document_numbers.join(',')}.json", fetch_options)
   end
-  
+
   def agencies
     attributes["agencies"].map do |attr|
       FederalRegister::Agency.new(attr)
     end
   end
-  
+
   %w(full_text_xml abstract_html body_html raw_text mods).each do |file_type|
     define_method file_type do
       begin
