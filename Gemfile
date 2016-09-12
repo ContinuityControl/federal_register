@@ -10,7 +10,6 @@ group :development do
   gem "jeweler", "~> 1.6.0"
   gem "rcov", ">= 0"
   gem "rspec", "~> 2.6"
-  gem "rspec", "~> 2.6"
   gem "activesupport", "~> 3"
   gem "fakeweb", "~> 1.3.0"
 end
